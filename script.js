@@ -17,10 +17,18 @@ function renderTasks() {
     tasks.forEach(task => {
         const li = document.createElement('li');
         li.textContent = task.text;
+
+        const completeButton = document.createElement('button');
+        completeButton.textContent = 'Complete';
+        completeButton.classList.add('complete-btn');
+        completeButton.onclick = () => toggleTaskCompletion(task.id);
+        li.appendChild(completeButton);
+
         if (task.completed) {
             li.classList.add('completed');
+            completeButton.disabled = true;
         }
-        li.addEventListener('click', () => toggleTaskCompletion(task.id));
+
         taskList.appendChild(li);
     });
 }
@@ -51,12 +59,7 @@ function toggleTaskCompletion(id) {
     const taskIndex = tasks.findIndex(task => task.id === id);
     if (taskIndex !== -1) {
         const task = tasks[taskIndex];
-        task.completed = !task.completed;
-        if (task.completed) {
-            // Calculate elapsed time and display
-            const elapsedTime = Math.floor((Date.now() - task.startTime) / 1000);
-            alert(`Task completed! Elapsed time: ${elapsedTime} seconds`);
-        }
+        task.completed = true;
         saveTasks(tasks);
         renderTasks();
     }
