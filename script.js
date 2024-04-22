@@ -1,69 +1,46 @@
-// Function to retrieve tasks from localStorage
-function getTasks() {
-    return JSON.parse(localStorage.getItem('tasks')) || [];
-}
-
-// Function to save tasks to localStorage
-function saveTasks(tasks) {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-// Function to render tasks on the page
-function renderTasks() {
-    const taskList = document.getElementById('taskList');
-    taskList.innerHTML = '';
-
-    const tasks = getTasks();
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.textContent = task.text;
-
-        const completeButton = document.createElement('button');
-        completeButton.textContent = 'Complete';
-        completeButton.classList.add('complete-btn');
-        completeButton.onclick = () => toggleTaskCompletion(task.id);
-        li.appendChild(completeButton);
-
-        if (task.completed) {
-            li.classList.add('completed');
-            completeButton.disabled = true;
-        }
-
-        taskList.appendChild(li);
-    });
-}
-
 // Function to add a new task
 function addTask() {
-    const taskInput = document.getElementById('taskInput');
-    const text = taskInput.value.trim();
+  const taskInput = document.getElementById('taskInput');
+  const text = taskInput.value.trim();
 
-    if (text !== '') {
-        const tasks = getTasks();
-        const newTask = {
-            id: Date.now(),
-            text: text,
-            completed: false,
-            startTime: Date.now() // Record start time
-        };
-        tasks.push(newTask);
-        saveTasks(tasks);
-        renderTasks();
-        taskInput.value = '';
-    }
+  if (text !== '') {
+      const taskList = document.getElementById('taskList');
+      const li = document.createElement('li');
+      li.textContent = text;
+
+      const startTime = Date.now(); // Record start time
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.classList.add('delete-btn');
+      deleteButton.onclick = () => deleteTask(li);
+      li.appendChild(deleteButton);
+
+      const completeButton = document.createElement('button');
+      completeButton.textContent = 'Complete';
+      completeButton.classList.add('complete-btn');
+      completeButton.onclick = () => toggleTaskCompletion(li, startTime); // Pass start time
+      li.appendChild(completeButton);
+
+      taskList.appendChild(li);
+      taskInput.value = '';
+  }
 }
 
-// Function to toggle task completion status
-function toggleTaskCompletion(id) {
-    const tasks = getTasks();
-    const taskIndex = tasks.findIndex(task => task.id === id);
-    if (taskIndex !== -1) {
-        const task = tasks[taskIndex];
-        task.completed = true;
-        saveTasks(tasks);
-        renderTasks();
-    }
+// Function to delete a task
+function deleteTask(taskElement) {
+  taskElement.remove();
 }
 
-// Render tasks when the page loads
-window.onload = renderTasks;
+// Function to mark a task as completed
+function toggleTaskCompletion(taskElement, startTime) {
+  taskElement.classList.toggle('completed');
+
+  if (taskElement.classList.contains('completed')) {
+      const endTime = Date.now();
+      const elapsedTime = Math.floor((endTime - startTime) / 1000);
+      taskElement.textContent += ` (Completed in ${elapsedTime} seconds)`;
+  } else {
+      taskElement.textContent = taskElement.textContent.split(' (')[0];
+  }
+}
