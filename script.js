@@ -1,56 +1,66 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const addButton = document.getElementById('addButton');
-    const taskInput = document.getElementById('taskInput');
+// Function to retrieve tasks from localStorage
+function getTasks() {
+    return JSON.parse(localStorage.getItem('tasks')) || [];
+}
+
+// Function to save tasks to localStorage
+function saveTasks(tasks) {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Function to render tasks on the page
+function renderTasks() {
     const taskList = document.getElementById('taskList');
-  
-    addButton.addEventListener('click', function() {
-      const taskText = taskInput.value.trim();
-      if (taskText !== '') {
-        addTask(taskText);
+    taskList.innerHTML = '';
+
+    const tasks = getTasks();
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task.text;
+        if (task.completed) {
+            li.classList.add('completed');
+        }
+        li.addEventListener('click', () => toggleTaskCompletion(task.id));
+        taskList.appendChild(li);
+    });
+}
+
+// Function to add a new task
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const text = taskInput.value.trim();
+
+    if (text !== '') {
+        const tasks = getTasks();
+        const newTask = {
+            id: Date.now(),
+            text: text,
+            completed: false,
+            startTime: Date.now() // Record start time
+        };
+        tasks.push(newTask);
+        saveTasks(tasks);
+        renderTasks();
         taskInput.value = '';
-      }
-    });
-  
-    taskList.addEventListener('click', function(event) {
-      if (event.target.classList.contains('complete-button')) {
-        const taskItem = event.target.parentNode;
-        const timeDiff = calculateTimeDifference(taskItem.dataset.startTime);
-        taskItem.textContent += ` - Completed in ${timeDiff}`;
-        setTimeout(() => {
-          taskItem.remove();
-        }, 10000); // Remove the task after 3 seconds
-      }
-    });
-  
-    function addTask(taskText) {
-      const li = document.createElement('li');
-      li.className = 'task-item';
-      li.dataset.startTime = new Date().getTime();
-      li.innerHTML = `
-        <span class="task-text">${taskText}</span>
-        <button class="complete-button">Complete</button>
-      `;
-      taskList.appendChild(li);
     }
-  
-    function calculateTimeDifference(startTime) {
-      const endTime = new Date().getTime();
-      const timeDiff = endTime - startTime;
-      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  
-      let timeString = '';
-      if (hours > 0) {
-        timeString += `${hours} hour(s) `;
-      }
-      if (minutes > 0) {
-        timeString += `${minutes} minute(s) `;
-      }
-      if (seconds > 0) {
-        timeString += `${seconds} second(s)`;
-      }
-      return timeString;
+}
+
+// Function to toggle task completion status
+function toggleTaskCompletion(id) {
+    const tasks = getTasks();
+    const taskIndex = tasks.findIndex(task => task.id === id);
+    if (taskIndex !== -1) {
+        const task = tasks[taskIndex];
+        task.completed = !task.completed;
+        if (task.completed) {
+            // Calculate elapsed time and display
+            const elapsedTime = Math.floor((Date.now() - task.startTime) / 1000);
+            alert(`Task completed! Elapsed time: ${elapsedTime} seconds`);
+        }
+        saveTasks(tasks);
+        renderTasks();
     }
-  });
-  
+}
+
+// Render tasks when the page loads
+window.onload = renderTasks;
