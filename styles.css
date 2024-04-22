@@ -1,75 +1,64 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
     background-color: #f8f9fa;
-  }
-  
-  .todo-container {
-    margin: 20px auto;
-    width: 300px;
-    background-color: #fff;
-    border-radius: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
     padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  #taskInput {
-    width: calc(100% - 70px);
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+}
+
+input[type="text"] {
+    width: calc(100% - 80px);
+    padding: 10px;
     margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  #addButton {
-    width: 70px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 5px;
-  }
-  
-  #addButton:hover {
-    background-color: #0056b3;
-  }
-  
-  #taskList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    margin-bottom: 8px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .task-text {
-    flex-grow: 1;
-    margin-right: 10px;
-  }
-  
-  .complete-button {
-    padding: 5px 10px;
-    font-size: 14px;
+    border-radius: 4px;
     cursor: pointer;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .complete-button:hover {
-    background-color: #218838;
-  }
-  
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.time {
+    margin-left: auto;
+    color: #6c757d;
+    font-size: 14px;
+}
